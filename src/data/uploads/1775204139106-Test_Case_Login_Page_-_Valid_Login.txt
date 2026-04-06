@@ -1,0 +1,26 @@
+Test Case: Login Page - Valid Login
+Type: frontend
+Page: /login
+
+Steps:
+1. Open login page
+2. Enter valid username
+3. Enter valid password
+4. Click login button
+
+Expected:
+User should be redirected to dashboard
+
+---
+
+Test Case: Login Page - Invalid Login
+Type: frontend
+Page: /login
+
+Steps:
+1. Open login page
+2. Enter invalid credentials
+3. Click login button
+
+Expected:
+Error message should be displayed
