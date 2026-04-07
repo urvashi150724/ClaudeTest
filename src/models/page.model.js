@@ -12,6 +12,9 @@ const pageSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    path:{
+      type: String,
+    },
     title: {
       type: String,
       default: "",
@@ -36,6 +39,6 @@ const pageSchema = new mongoose.Schema(
   }
 );
 
-const Page = mongoose.model("Page", pageSchema);
+pageSchema.index({ projectId: 1, url: 1}, { unique: true});
 
-export default Page;
+export default mongoose.model("Page", pageSchema);

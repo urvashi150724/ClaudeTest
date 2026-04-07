@@ -1,6 +1,22 @@
 import anthropic from "../../config/anthropic.js";
 
 
+
+//helper for stripping md fencing
+
+function stripMarkdownCodeFence(text) {
+  if (!text || typeof text !== "string") {
+    return text;
+  }
+
+  return text
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+}
+
+
 function extractTextFromClaudeResponse(response) {
   if (!response?.content || !Array.isArray(response.content)) {
     return "";
@@ -20,8 +36,9 @@ Your job is to convert uploaded test case content into a strict JSON array.
 
 Rules:
 1. Return ONLY valid JSON.
-2. Output must be an array.
-3. Each object must follow this exact structure:
+2. Do not wrap the response in markdown or code fences.
+3. Output must be an array.
+4. Each object must follow this exact structure:
 
 [
   {
@@ -47,8 +64,6 @@ Normalization rules:
 
 If input contains multiple test cases, return multiple objects in the array.
 If input is messy, infer structure carefully.
-Do not include markdown.
-Do not include explanation text.
 Return only JSON.
 
 Input:
@@ -73,15 +88,16 @@ export async function normalizeTestCasesWithClaude({ parsedContent, suiteType })
     });
 
     const rawText = extractTextFromClaudeResponse(response).trim();
-
+    const cleanedText = stripMarkdownCodeFence(rawText);
     let normalizedJson;
     try {
-      normalizedJson = JSON.parse(rawText);
+      normalizedJson = JSON.parse(cleanedText);
     } catch (parseError) {
       return {
         success: false,
         message: "Claude returned invalid JSON",
         rawResponse: rawText,
+        cleanedResponse: cleanedText,
         error: parseError.message,
       };
     }
@@ -91,7 +107,9 @@ export async function normalizeTestCasesWithClaude({ parsedContent, suiteType })
         success: false,
         message: "Claude response is not an array",
         rawResponse: rawText,
+        cleanedResponse: cleanedText,
       };
+      
     }
 
     return {

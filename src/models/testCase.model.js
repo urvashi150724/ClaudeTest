@@ -59,10 +59,30 @@ const testCaseSchema = new mongoose.Schema(
       enum: ["pending", "normalized", "failed"],
       default: "normalized",
     },
+    matchedPageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Page",
+      default: null,
+    },
+    matchedPageUrl: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    mappingMethod: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    mappingConfidence: {
+      type: String,
+      enum: ["low", "medium", "high"],
+      default: "low",
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const TestCase = mongoose.model("TestCase", testCaseSchema);
