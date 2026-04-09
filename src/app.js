@@ -6,6 +6,7 @@ import runRoutes from "./routes/run.routes.js";
 import crawlRoutes from "./routes/crawl.routes.js";
 import pageRoutes from "./routes/page.routes.js";
 import mappingRoutes from "./routes/mapping.routes.js";
+import executionRoutes from "./routes/execution.routes.js";
 
 const app = express();
 
@@ -20,11 +21,12 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/projects", projectRoutes);
-app.use("/api/uploads", uploadRoutes);
+app.use("/api/uploads", uploadRoutes);             
 app.use("/api/runs", runRoutes);
 app.use("/api/projects", crawlRoutes);
 app.use("/api/projects", pageRoutes);
-app.use("/api/projects", mappingRoutes)
+app.use("/api/projects", mappingRoutes);
+app.use("/api/execution", executionRoutes);
  
 
 export default app;
